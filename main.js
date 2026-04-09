@@ -37,36 +37,6 @@
     nextInput.value = thanksPageUrl();
   }
 
-  /* Как у обычной формы: x-www-form-urlencoded (не multipart). Иначе у Formspree в инбоксе часто ломается колонка phone. */
-  function formToUrlEncodedBody(form) {
-    var params = new URLSearchParams();
-    var elements = form.elements;
-    var i;
-    var el;
-    var type;
-    for (i = 0; i < elements.length; i++) {
-      el = elements[i];
-      if (!el.name || el.disabled) {
-        continue;
-      }
-      type = (el.type || "").toLowerCase();
-      if (type === "submit" || type === "button") {
-        continue;
-      }
-      if (type === "checkbox" || type === "radio") {
-        if (el.checked) {
-          params.append(el.name, el.value);
-        }
-        continue;
-      }
-      if (type === "file") {
-        continue;
-      }
-      params.append(el.name, el.value);
-    }
-    return params.toString();
-  }
-
   /* Formspree JSON API: надёжнее, чем полагаться на серверный редирект по _next */
   var contactForm = document.querySelector(".contact-form");
   var statusEl = document.getElementById("contact-form-status");
@@ -95,16 +65,13 @@
       }
 
       var action = contactForm.getAttribute("action");
-      var body = formToUrlEncodedBody(contactForm);
+      var fd = new FormData(contactForm);
 
       window
         .fetch(action, {
           method: "POST",
-          body: body,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-          },
+          body: fd,
+          headers: { Accept: "application/json" },
         })
         .then(function (response) {
           if (response.ok) {
