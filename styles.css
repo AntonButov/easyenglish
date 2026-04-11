@@ -293,7 +293,7 @@ img {
   }
 }
 
-/* Страница «Спасибо» после отправки формы */
+/* Страница «Спасибо» после Formspree */
 .thanks-section {
   padding: 4rem 0 4.5rem;
   min-height: calc(70vh - var(--header-h));

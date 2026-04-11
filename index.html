@@ -249,10 +249,33 @@
       <div class="container container-narrow cta-inner">
         <h2 id="contacts-title">Запись и вопросы</h2>
         <p class="cta-lead">Оставьте имя и телефон — перезвоним или напишем. Написать в Telegram можно кнопкой вверху страницы.</p>
-        <!-- Заявки: REST (telegram-relay в Docker) → Telegram. Пример: https://ваш-домен/api/contact -->
-        <form class="contact-form" action="#" method="post" data-telegram-endpoint="">
-          <!-- Honeypot вставляется из main.js после загрузки, чтобы автозаполнение не заполняло _gotcha -->
-          <p class="form-honeypot" aria-hidden="true"></p>
+        <!-- При включённой reCAPTCHA в Formspree + AJAX: вставьте публичный Site Key (reCAPTCHA v3).
+             Secret key — только в настройках Formspree. Пусто = обычная отправка формы без fetch. -->
+        <form
+          class="contact-form"
+          action="https://formspree.io/f/mgopqjdp"
+          method="POST"
+          data-recaptcha-site-key=""
+        >
+          <input type="hidden" name="_subject" value="Заявка: English for Architects" />
+          <!-- _next: на хостинге main.js подставит полный URL; в Formspree можно дублировать в настройках формы -->
+          <input type="hidden" name="_next" value="thanks.html" />
+          <p class="form-honeypot" aria-hidden="true">
+            <!-- id без «company» — иначе автозаполнение может заполнить _gotcha и Formspree отметит заявку как спам -->
+            <label for="form-hp-trap">Не заполнять</label>
+            <input
+              id="form-hp-trap"
+              type="text"
+              name="_gotcha"
+              tabindex="-1"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              data-lpignore="true"
+              data-1p-ignore="true"
+            />
+          </p>
           <div class="form-row">
             <label for="contact-name">Имя</label>
             <input

@@ -31,91 +31,133 @@
     }
   }
 
+  /* Formspree: полный URL для редиректа при обычной отправке (без fetch) */
+  var nextInput = document.querySelector('.contact-form input[name="_next"]');
+  if (nextInput && window.location.protocol !== "file:") {
+    nextInput.value = thanksPageUrl();
+  }
+
+  /* Formspree: при data-recaptcha-site-key (reCAPTCHA v3) — fetch + g-recaptcha-response.
+     Без ключа — обычный POST (нужно при включённой капче в Formspree без своих ключей). */
   var contactForm = document.querySelector(".contact-form");
   var statusEl = document.getElementById("contact-form-status");
-  var apiUrl =
+  var recaptchaSiteKey =
     contactForm &&
-    contactForm.getAttribute("data-telegram-endpoint") &&
-    contactForm.getAttribute("data-telegram-endpoint").trim();
+    contactForm.getAttribute("data-recaptcha-site-key") &&
+    contactForm.getAttribute("data-recaptcha-site-key").trim();
 
-  if (contactForm) {
-    var hpWrap = contactForm.querySelector(".form-honeypot");
-    var hp = document.createElement("input");
-    hp.type = "text";
-    hp.name = "_gotcha";
-    hp.id = "form-hp-trap";
-    hp.setAttribute("tabindex", "-1");
-    hp.setAttribute("autocomplete", "off");
-    hp.setAttribute("autocorrect", "off");
-    hp.setAttribute("autocapitalize", "off");
-    hp.setAttribute("spellcheck", "false");
-    hp.setAttribute("data-lpignore", "true");
-    hp.setAttribute("data-1p-ignore", "true");
-    hp.setAttribute("data-bwignore", "true");
-    hp.value = "";
-    (hpWrap || contactForm).appendChild(hp);
-    contactForm.addEventListener("focusin", function (e) {
-      if (e.target !== hp) {
-        hp.value = "";
+  function loadRecaptchaScript(siteKey) {
+    return new Promise(function (resolve, reject) {
+      if (window.grecaptcha && typeof window.grecaptcha.execute === "function") {
+        resolve();
+        return;
       }
+      var src =
+        "https://www.google.com/recaptcha/api.js?render=" +
+        encodeURIComponent(siteKey);
+      var existing = document.querySelector('script[src^="https://www.google.com/recaptcha/api.js"]');
+      if (existing) {
+        if (existing.getAttribute("src") === src) {
+          existing.addEventListener("load", function onLoad() {
+            existing.removeEventListener("load", onLoad);
+            resolve();
+          });
+          existing.addEventListener("error", function onErr() {
+            existing.removeEventListener("error", onErr);
+            reject(new Error("recaptcha-load"));
+          });
+          return;
+        }
+      }
+      var s = document.createElement("script");
+      s.src = src;
+      s.async = true;
+      s.onload = function () {
+        resolve();
+      };
+      s.onerror = function () {
+        reject(new Error("recaptcha-load"));
+      };
+      document.head.appendChild(s);
     });
   }
 
-  function showFormError(btn, originalBtnText, message) {
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = originalBtnText;
-    }
-    if (statusEl) {
-      statusEl.hidden = false;
-      statusEl.textContent = message;
-    }
+  function executeRecaptchaV3(siteKey) {
+    return new Promise(function (resolve, reject) {
+      window.grecaptcha.ready(function () {
+        window.grecaptcha
+          .execute(siteKey, { action: "submit" })
+          .then(resolve)
+          .catch(reject);
+      });
+    });
   }
 
-  function submitContact(btn, originalBtnText) {
-    var nameInput = contactForm.querySelector('[name="name"]');
-    var phoneInput = contactForm.querySelector('[name="phone"]');
-    var honeypot = contactForm.querySelector('[name="_gotcha"]');
-    var hpRaw = honeypot ? honeypot.value : "";
-    var body = {
-      name: nameInput ? nameInput.value.trim() : "",
-      phone: phoneInput ? phoneInput.value.trim() : "",
-      _gotcha: typeof hpRaw === "string" ? hpRaw.trim() : "",
-    };
-
-    window
-      .fetch(apiUrl, {
+  function submitFormspreeAjax(fd, btn, originalBtnText) {
+    var action = contactForm.getAttribute("action");
+    return window
+      .fetch(action, {
         method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+        body: fd,
+        headers: { Accept: "application/json" },
       })
       .then(function (response) {
+        if (response.ok) {
+          window.location.href = thanksPageUrl();
+          return;
+        }
         return response.text().then(function (text) {
           var data = {};
           try {
             data = text ? JSON.parse(text) : {};
           } catch (ignore) {
-            /* не JSON */
+            /* ответ не JSON (например страница ошибки) */
           }
-          if (!response.ok) {
-            throw new Error((data && data.error) || "Ошибка сервера");
+          var msg = "Не удалось отправить заявку.";
+          if (data && data.error) {
+            msg =
+              typeof data.error === "string"
+                ? data.error
+                : Array.isArray(data.error)
+                ? data.error.join(" ")
+                : msg;
+          } else if (data && data.errors) {
+            var parts = [];
+            Object.keys(data.errors).forEach(function (key) {
+              var v = data.errors[key];
+              if (Array.isArray(v)) {
+                parts.push(v.join(" "));
+              } else if (typeof v === "string") {
+                parts.push(v);
+              }
+            });
+            if (parts.length) {
+              msg = parts.join(" ");
+            }
+          } else if (response.status === 404) {
+            msg =
+              "Форма не найдена на Formspree — проверьте ID формы в панели Formspree.";
+          } else if (response.status === 403 || response.status === 401) {
+            msg =
+              "Formspree отклонил запрос: подтвердите email формы или проверьте лимиты в панели.";
           }
-          if (!data.ok) {
-            throw new Error((data && data.error) || "Заявка не принята");
-          }
-          window.location.href = thanksPageUrl();
+          throw new Error(msg);
         });
       })
       .catch(function (err) {
-        showFormError(
-          btn,
-          originalBtnText,
-          (err && err.message) ||
-            "Проверьте интернет или напишите в Telegram — форма недоступна."
-        );
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = originalBtnText;
+        }
+        if (statusEl) {
+          statusEl.hidden = false;
+          statusEl.textContent =
+            err && err.message === "recaptcha-load"
+              ? "Не удалось загрузить reCAPTCHA (проверьте ключ v3 и блокировщики)."
+              : err && err.message
+              ? err.message
+              : "Проверьте интернет или напишите в Telegram — форма временно недоступна.";
+        }
       });
   }
 
@@ -123,12 +165,18 @@
     contactForm &&
     typeof window.fetch === "function" &&
     window.location.protocol !== "file:" &&
-    apiUrl
+    recaptchaSiteKey
   ) {
     contactForm.addEventListener("submit", function (e) {
       e.preventDefault();
+
+      if (nextInput) {
+        nextInput.value = thanksPageUrl();
+      }
+
       var btn = contactForm.querySelector('button[type="submit"]');
       var originalBtnText = btn ? btn.textContent : "";
+
       if (statusEl) {
         statusEl.hidden = true;
         statusEl.textContent = "";
@@ -137,16 +185,30 @@
         btn.disabled = true;
         btn.textContent = "Отправка…";
       }
-      submitContact(btn, originalBtnText);
-    });
-  } else if (contactForm && window.location.protocol !== "file:" && !apiUrl) {
-    contactForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (statusEl) {
-        statusEl.hidden = false;
-        statusEl.textContent =
-          "Задайте в форме полный URL API в data-telegram-endpoint (HTTPS, …/api/contact). См. папку telegram-relay.";
-      }
+
+      var fd = new FormData(contactForm);
+
+      loadRecaptchaScript(recaptchaSiteKey)
+        .then(function () {
+          return executeRecaptchaV3(recaptchaSiteKey);
+        })
+        .then(function (token) {
+          fd.set("g-recaptcha-response", token);
+          return submitFormspreeAjax(fd, btn, originalBtnText);
+        })
+        .catch(function (err) {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = originalBtnText;
+          }
+          if (statusEl) {
+            statusEl.hidden = false;
+            statusEl.textContent =
+              err && err.message === "recaptcha-load"
+                ? "Не удалось загрузить reCAPTCHA (проверьте ключ v3 и блокировщики)."
+                : "Проверка reCAPTCHA не сработала. Обновите страницу и попробуйте снова.";
+          }
+        });
     });
   }
 })();
