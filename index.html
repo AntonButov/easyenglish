@@ -30,15 +30,29 @@
         </ul>
       </nav>
       <div class="header-toolbar">
-        <a
-          class="btn btn-header-tg"
-          href="https://t.me/I_am_Oksana_Nalesnaya"
-          rel="noopener noreferrer"
-          target="_blank"
-          aria-label="Написать в Telegram"
-        >
-          <img class="btn-header-tg__svg" src="assets/telegram-icon.svg" width="44" height="44" alt="" decoding="async" />
-        </a>
+        <div class="header-messenger-links" role="group" aria-label="Написать в мессенджерах">
+          <a
+            class="btn btn-header-tg"
+            href="https://t.me/I_am_Oksana_Nalesnaya"
+            rel="noopener noreferrer"
+            target="_blank"
+            aria-label="Написать в Telegram"
+          >
+            <img class="btn-header-tg__svg" src="assets/telegram-icon.svg" width="44" height="44" alt="" decoding="async" />
+          </a>
+          <a
+            class="btn btn-header-tg"
+            href="https://wa.me/79298185051"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Написать в WhatsApp"
+          >
+            <img class="btn-header-tg__svg" src="assets/whatsapp-icon.svg" width="44" height="44" alt="" decoding="async" />
+          </a>
+          <a class="btn btn-header-tg" href="tel:+79298185051" aria-label="Позвонить или написать в MAX">
+            <img class="btn-header-tg__svg" src="assets/max-icon.svg" width="44" height="44" alt="" decoding="async" />
+          </a>
+        </div>
         <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Открыть меню">
           <span class="nav-toggle-bar" aria-hidden="true"></span>
           <span class="nav-toggle-bar" aria-hidden="true"></span>
@@ -249,21 +263,7 @@
     <section class="section section-cta" id="contacts" aria-labelledby="contacts-title">
       <div class="container container-narrow cta-inner">
         <h2 id="contacts-title">Запись и вопросы</h2>
-        <p class="cta-lead">Оставьте имя и телефон — перезвоним или напишем. Также можно сразу написать в WhatsApp или MAX.</p>
-        <div class="messenger-links" aria-label="Мессенджеры для связи">
-          <a
-            class="btn btn-header-tg"
-            href="https://wa.me/79298185051"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Написать в WhatsApp"
-          >
-            <img class="btn-header-tg__svg" src="assets/whatsapp-icon.svg" width="44" height="44" alt="" decoding="async" />
-          </a>
-          <a class="btn btn-header-tg" href="tel:+79298185051" aria-label="Позвонить или написать в MAX">
-            <img class="btn-header-tg__svg" src="assets/max-icon.svg" width="44" height="44" alt="" decoding="async" />
-          </a>
-        </div>
+        <p class="cta-lead">Оставьте имя и телефон — перезвоним или напишем. Написать в Telegram, WhatsApp или MAX можно кнопками в шапке страницы.</p>
         <!-- При включённой reCAPTCHA в Formspree + AJAX: вставьте публичный Site Key (reCAPTCHA v3).
              Secret key — только в настройках Formspree. Пусто = обычная отправка формы без fetch. -->
         <form
