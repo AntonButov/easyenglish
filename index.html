@@ -251,10 +251,19 @@
         <h2 id="contacts-title">Запись и вопросы</h2>
         <p class="cta-lead">Оставьте имя и телефон — перезвоним или напишем. Также можно сразу написать в WhatsApp или MAX.</p>
         <div class="messenger-links" aria-label="Мессенджеры для связи">
-          <a class="btn messenger-btn messenger-btn-whatsapp" href="https://wa.me/79298185051" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-          <a class="btn messenger-btn messenger-btn-max" href="tel:+79298185051">MAX</a>
+          <a
+            class="btn btn-header-tg"
+            href="https://wa.me/79298185051"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Написать в WhatsApp"
+          >
+            <img class="btn-header-tg__svg" src="assets/whatsapp-icon.svg" width="44" height="44" alt="" decoding="async" />
+          </a>
+          <a class="btn btn-header-tg" href="tel:+79298185051" aria-label="Позвонить или написать в MAX">
+            <img class="btn-header-tg__svg" src="assets/max-icon.svg" width="44" height="44" alt="" decoding="async" />
+          </a>
         </div>
-        <p class="messenger-phone">+7 929 818-50-51</p>
         <!-- При включённой reCAPTCHA в Formspree + AJAX: вставьте публичный Site Key (reCAPTCHA v3).
              Secret key — только в настройках Formspree. Пусто = обычная отправка формы без fetch. -->
         <form
