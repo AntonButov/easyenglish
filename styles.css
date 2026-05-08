@@ -244,6 +244,15 @@ img {
 }
 
 @media (max-width: 768px) {
+  /* Шапка в потоке документа: при скролле уезжает вверх вместе с контентом (не «прилипает»). */
+  .site-header {
+    position: relative;
+  }
+
+  section[id] {
+    scroll-margin-top: 1rem;
+  }
+
   .nav-toggle {
     display: flex;
   }
