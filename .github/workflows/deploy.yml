@@ -1,0 +1,49 @@
+name: Deploy archenglish.ru
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-archenglish
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: GitHub Pages
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare static site
+        run: |
+          mkdir -p _site
+          cp CNAME index.html thanks.html styles.css main.js content-segments.js _site/
+          cp -r assets _site/
+          cp .nojekyll _site/
+
+      - name: Verify site files
+        run: |
+          test -f _site/index.html
+          test -f _site/content-segments.js
+          test -f _site/CNAME
+          grep -q archenglish.ru _site/CNAME
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
