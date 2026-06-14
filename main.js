@@ -1,6 +1,12 @@
 (function () {
   "use strict";
 
+  if (window.EasyEnglishSegments) {
+    window.EasyEnglishSegments.applySegment(
+      window.EasyEnglishSegments.detectSegment()
+    );
+  }
+
   var nav = document.getElementById("site-nav");
   var toggle = document.querySelector(".nav-toggle");
   var yearEl = document.getElementById("year");
