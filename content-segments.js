@@ -6,9 +6,9 @@
       id: "engineers",
       pageTitle: "Английский для инженеров | EasyEnglish",
       metaDescription:
-        "Английский для инженеров — технический английский онлайн и офлайн. Преподаватель с 20-летним стажем, EasyEnglish.",
+        "Английский для инженеров — технический английский онлайн. EasyEnglish, занятия по видеосвязи.",
       logo: "English for Engineers",
-      eyebrow: "Для инженеров, которые хотят уверенный рабочий английский",
+      eyebrow: "Онлайн-школа · только дистанционно · для инженеров",
       heroTitle:
         "Английский для инженеров: документация, встречи и переписка без стресса",
       heroLead:
@@ -50,8 +50,21 @@
           text: "Созвон с заказчиком, уточнение допусков, координация с смежными отделами, обход объекта.",
         },
         {
-          title: "Онлайн или офлайн",
-          text: "Удобный график; материалы остаются у вас для повторения между занятиями.",
+          title: "Онлайн",
+          text: "Занятия по видеосвязи из любой точки; материалы остаются у вас для повторения между уроками.",
+        },
+      ],
+      topicsTitle: "Запросы, которые уже приводят с рекламы",
+      topicsSub:
+        "Разбираем на занятиях — без абстрактных тем из учебника.",
+      topicsCards: [
+        {
+          title: "Как выучить технический английский",
+          text: "План с нуля: лексика по вашей отрасли, созвоны, чтение документации — без зубрёжки ради экзамена.",
+        },
+        {
+          title: "CAD/CAE и рабочая документация",
+          text: "Ansys, чертежи, спецификации: формулировки и переписка по реальным задачам инженера.",
         },
       ],
       reviews: [
@@ -82,7 +95,7 @@
       metaDescription:
         "Английский для архитекторов — онлайн-курс EasyEnglish. Английский язык для архитекторов: документация, созвоны и переписка.",
       logo: "English for Architects",
-      eyebrow: "Для архитекторов, которым нужен рабочий английский",
+      eyebrow: "Онлайн-школа · только дистанционно · для архитекторов",
       heroTitle:
         "Английский для архитекторов: документация, созвоны и переписка",
       heroLead:
@@ -143,6 +156,18 @@
           text: "«После занятий проще вести переписку и созвоны на английском по текущему объекту.»",
           author: "Мария В.",
           role: "ведущий архитектор",
+        },
+      ],
+      topicsTitle: "Запросы с рекламы",
+      topicsSub: "Академический и рабочий английский в архитектуре и строительстве.",
+      topicsCards: [
+        {
+          title: "Академический английский в архитектуре",
+          text: "Проектная документация, созвоны с заказчиком, формулировки без «перевода в голове».",
+        },
+        {
+          title: "Строительство и материалы",
+          text: "Лексика по объектам, свойствам материалов и переписке на английском.",
         },
       ],
       formSubject: "Заявка: English for Architects",
@@ -220,6 +245,24 @@
       if (title) title.textContent = card.title;
       if (p) p.textContent = card.text;
     });
+
+    if (data.topicsCards) {
+      setText("#topics-title", data.topicsTitle);
+      setText("#topics .section-sub", data.topicsSub);
+      var topicCards = document.querySelectorAll("#topics .card");
+      data.topicsCards.forEach(function (card, i) {
+        if (!topicCards[i]) return;
+        var title = topicCards[i].querySelector(".card-title");
+        var p = topicCards[i].querySelector("p");
+        if (title) title.textContent = card.title;
+        if (p) p.textContent = card.text;
+      });
+    }
+
+    var onlineBadge = document.getElementById("online-badge");
+    if (onlineBadge) {
+      onlineBadge.textContent = "Только онлайн — без очных занятий";
+    }
 
     var reviewCards = document.querySelectorAll(".review-card");
     data.reviews.forEach(function (review, i) {

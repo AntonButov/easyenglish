@@ -1,6 +1,14 @@
 (function () {
   "use strict";
 
+  var METRIKA_ID = 108484427;
+
+  function reachGoal(name) {
+    if (typeof window.ym === "function" && name) {
+      window.ym(METRIKA_ID, "reachGoal", name);
+    }
+  }
+
   if (window.EasyEnglishSegments) {
     window.EasyEnglishSegments.applySegment(
       window.EasyEnglishSegments.detectSegment()
@@ -165,6 +173,55 @@
               : "Проверьте интернет или напишите в Telegram — форма временно недоступна.";
         }
       });
+  }
+
+  document.querySelectorAll('[data-goal="messenger"]').forEach(function (link) {
+    link.addEventListener("click", function () {
+      reachGoal("messenger_click");
+    });
+  });
+
+  document.querySelectorAll('a[href="#contacts"]').forEach(function (link) {
+    link.addEventListener("click", function () {
+      reachGoal("cta_to_form");
+    });
+  });
+
+  var contactsSection = document.getElementById("contacts");
+
+  var stickyCta = document.getElementById("sticky-cta");
+  if (stickyCta) {
+    stickyCta.hidden = false;
+    if (contactsSection) {
+      var updateSticky = function () {
+        var pastHero = window.scrollY > window.innerHeight * 0.35;
+        var formVisible =
+          contactsSection.getBoundingClientRect().top < window.innerHeight * 0.75;
+        stickyCta.classList.toggle("is-visible", pastHero && !formVisible);
+      };
+      window.addEventListener("scroll", updateSticky, { passive: true });
+      updateSticky();
+    } else {
+      stickyCta.classList.add("is-visible");
+    }
+  }
+
+  if (contactsSection) {
+    var formViewTracked = false;
+    if (typeof IntersectionObserver === "function") {
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting && !formViewTracked) {
+              formViewTracked = true;
+              reachGoal("form_view");
+            }
+          });
+        },
+        { threshold: 0.35 }
+      );
+      observer.observe(contactsSection);
+    }
   }
 
   if (

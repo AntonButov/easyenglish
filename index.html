@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#5e1a24" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <meta name="description" content="Английский для инженеров — технический английский онлайн и офлайн. Преподаватель с 20-летним стажем, EasyEnglish." />
+  <meta name="description" content="Английский для инженеров — технический английский онлайн. EasyEnglish, занятия по видеосвязи." />
   <meta name="yandex-verification" content="b1f06b6a7f657af9" />
   <title>Английский для инженеров | EasyEnglish</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,6 +23,8 @@
         <ul class="nav-list">
           <li><a href="#about">О курсе</a></li>
           <li><a href="#teacher">Преподаватель</a></li>
+          <li><a href="#program">Формат</a></li>
+          <li><a href="#topics">Темы</a></li>
           <li><a href="#reviews">Отзывы</a></li>
           <li><a href="#pricing">Тарифы</a></li>
           <li><a href="#faq">Вопросы</a></li>
@@ -37,6 +39,7 @@
             rel="noopener noreferrer"
             target="_blank"
             aria-label="Написать в Telegram"
+            data-goal="messenger"
           >
             <img class="btn-header-tg__svg" src="assets/telegram-icon.svg" width="44" height="44" alt="" decoding="async" />
           </a>
@@ -46,6 +49,7 @@
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Написать в WhatsApp"
+            data-goal="messenger"
           >
             <img class="btn-header-tg__svg" src="assets/whatsapp-icon.svg" width="44" height="44" alt="" decoding="async" />
           </a>
@@ -67,13 +71,14 @@
       <div class="container hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">Для инженеров, которые хотят уверенный рабочий английский</p>
+          <p class="online-badge" id="online-badge">Только онлайн — без очных занятий</p>
           <h1 id="hero-title">Английский для инженеров: документация, встречи и переписка без стресса</h1>
           <p class="lead">
             Разбираем спецификации, письма и созвоны в реальных инженерных ситуациях — от согласования ТЗ до обсуждения узлов и сроков на стройке или в производстве.
           </p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#pricing">Выбрать формат</a>
-            <a class="btn btn-secondary" href="#teacher">О преподавателе</a>
+            <a class="btn btn-primary" href="https://t.me/I_am_Oksana_Nalesnaya" target="_blank" rel="noopener noreferrer" data-goal="messenger">Написать в Telegram</a>
+            <a class="btn btn-secondary" href="#pricing">Выбрать формат</a>
           </div>
         </div>
         <div class="hero-visual">
@@ -144,8 +149,27 @@
             <p>Созвон с заказчиком, уточнение допусков, координация с смежными отделами, обход объекта.</p>
           </article>
           <article class="card">
-            <h3 class="card-title">Онлайн или офлайн</h3>
-            <p>Удобный график; материалы остаются у вас для повторения между занятиями.</p>
+            <h3 class="card-title">Онлайн</h3>
+            <p>Занятия по видеосвязи из любой точки; материалы остаются у вас для повторения между уроками.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="topics" aria-labelledby="topics-title">
+      <div class="container">
+        <header class="section-head">
+          <h2 id="topics-title">Запросы, которые уже приводят с рекламы</h2>
+          <p class="section-sub">Разбираем на занятиях — без абстрактных тем из учебника.</p>
+        </header>
+        <div class="card-grid card-grid-2">
+          <article class="card">
+            <h3 class="card-title">Как выучить технический английский</h3>
+            <p>План с нуля: лексика по вашей отрасли, созвоны, чтение документации — без зубрёжки ради экзамена.</p>
+          </article>
+          <article class="card">
+            <h3 class="card-title">CAD/CAE и рабочая документация</h3>
+            <p>Ansys, чертежи, спецификации: формулировки и переписка по реальным задачам инженера.</p>
           </article>
         </div>
       </div>
@@ -254,7 +278,7 @@
           </details>
           <details class="faq-item">
             <summary>Где проходят занятия?</summary>
-            <p>Онлайн или офлайн — уточните удобный формат в сообщении.</p>
+            <p>Только онлайн — по видеосвязи. Очных занятий нет.</p>
           </details>
         </div>
       </div>
@@ -327,6 +351,16 @@
       <p class="footer-copy">© <span id="year"></span> <span id="footer-suffix">English for Engineers. Информация на странице носит ознакомительный характер.</span></p>
     </div>
   </footer>
+
+  <a
+    class="sticky-cta"
+    id="sticky-cta"
+    href="https://t.me/I_am_Oksana_Nalesnaya"
+    target="_blank"
+    rel="noopener noreferrer"
+    data-goal="messenger"
+    hidden
+  >Написать в Telegram</a>
 
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
